@@ -1,0 +1,5 @@
+<resources>
+	<string name="app_name">CatWallpaper</string>
+	<string name="title_activity_start_view">StartView</string>
+	<string name="expanded_view_transition_element">expanded_view_transition_element</string>
+</resources>

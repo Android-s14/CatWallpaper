@@ -1,0 +1,70 @@
+apply plugin: 'com.android.application'
+apply from: '../buildsystem/dependencies.gradle'
+apply plugin: 'kotlin-android'
+apply plugin: 'com.fernandocejas.frodo'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.2"
+
+    defaultConfig {
+        applicationId "com.android_s14.catwallpaper"
+        minSdkVersion 16
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    sourceSets {
+        test {
+            java.srcDir "test"
+        }
+    }
+}
+
+kapt {
+    generateStubs = true
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    testCompile "junit:junit:$junit"
+    testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin"
+    testCompile 'org.mockito:mockito-all:2.0.2-beta'
+
+    androidTestCompile "org.jetbrains.kotlin:kotlin-test:$kotlin"
+    androidTestCompile "junit:junit:$junit"
+    androidTestCompile 'org.mockito:mockito-all:2.0.2-beta'
+
+    compile "com.android.support:appcompat-v7:$support"
+    compile "com.android.support:design:$support"
+
+    compile 'com.squareup.retrofit2:retrofit:$retrofit'
+    compile("com.squareup.retrofit2:converter-simplexml:$retrofit") {
+        exclude module: 'stax'
+        exclude module: 'stax-api'
+        exclude module: 'xpp3'
+    }
+
+    compile 'com.squareup.okhttp3:logging-interceptor:3.2.0'
+
+    compile 'io.reactivex:rxjava:1.1.1'
+    compile 'io.reactivex:rxandroid:1.1.0'
+
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin"
+    compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin"
+
+    compile 'com.squareup.picasso:picasso:2.5.2'
+
+    compile "com.google.dagger:dagger:$dagger"
+    kapt "com.google.dagger:dagger-compiler:$dagger"
+    provided 'org.glassfish:javax.annotation:10.0-b28'
+
+}
