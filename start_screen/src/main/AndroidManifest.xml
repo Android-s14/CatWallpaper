@@ -24,6 +24,12 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
+
+		<activity
+			android:name="expanded.screen.ExpandedView"
+			android:label="@string/expanded_view"
+			android:theme="@style/AppTheme.NoActionBar"
+			/>
 	</application>
 
 </manifest>

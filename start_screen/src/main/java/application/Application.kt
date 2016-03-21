@@ -6,6 +6,8 @@ import android.util.Log
 import com.squareup.picasso.Picasso
 import dagger.Module
 import dagger.Provides
+import expanded.screen.ExpandedComponent
+import expanded.screen.ExpandedViewModule
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -30,6 +32,8 @@ class Application : Application() {
 interface ApplicationComponent : Component {
 
   fun plus(viewModule: ViewModule): StartComponent
+
+  fun plus(viewModule: ExpandedViewModule) : ExpandedComponent
 
   fun inject(target: ImageHolder)
 

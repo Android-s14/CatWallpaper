@@ -49,7 +49,9 @@ inline fun <reified T : View> Activity.findOptionalView(id: Int): T? {
 inline fun <reified T : kotlin.Enum<T>> KClass<T>.safeValueOf(name: String): T? {
   try {
     return Enum.valueOf(T::class.java, name)
-  } catch(ignored : Throwable) {
+  } catch(ignored: Throwable) {
     return null
   }
 }
+
+fun <T, R> Pair<T, R>.toAndroidPair() = android.support.v4.util.Pair.create(first, second)
