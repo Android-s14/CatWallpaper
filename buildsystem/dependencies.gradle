@@ -1,9 +1,8 @@
 ext {
-    kotlin = '1.0.1'
+    kotlin = '1.0.1-1'
     support = '23.2.1'
     junit = '4.12'
     frodo = '0.8.2'
     retrofit = '2.0.0-beta4'
     dagger = '2.1'
-
 }

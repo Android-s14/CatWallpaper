@@ -5,12 +5,12 @@ import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.StaggeredGridLayoutManager
 import android.support.v7.widget.Toolbar
+import android.view.Menu
+import android.view.MenuItem
 import butterknife.bindView
 import com.android_s14.catwallpaper.R
 import dagger.Module
 import dagger.Provides
-import rx.android.schedulers.AndroidSchedulers
-import rx.subscriptions.CompositeSubscription
 import shared.*
 import javax.inject.Inject
 
@@ -34,7 +34,18 @@ class StartView : BaseView<ViewModel>() {
 
   override fun onDestroy() {
     super.onDestroy()
+  }
 
+  override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    menuInflater.inflate(R.menu.start_screen_menu, menu)
+    return true
+  }
+
+  override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+    when (item?.itemId) {
+      R.id.start_screen_refresh -> presenter.updateView()
+    }
+    return super.onOptionsItemSelected(item)
   }
 
   private fun setupView(savedInstanceState: Bundle?) {
@@ -55,41 +66,6 @@ class StartView : BaseView<ViewModel>() {
 
 }
 
-class StartPresenter(override val view: View<ViewModel>) : Presenter<ViewModel> {
-
-  @Inject lateinit var imageLoader: Interactor<Nothing, Collection<ViewModel>>
-
-  private val subscription = CompositeSubscription()
-
-  init {
-    (view.component as StartComponent).inject(this)
-  }
-
-  override fun onViewCreated() {
-    imageLoader.execute()
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe {
-          view.updateData(it)
-          view.hideLoading()
-        }.let { subscription.add(it) }
-  }
-
-  override fun onViewDestroyed() = subscription.clear()
-
-}
-
-class ImageUrlsFetcher(view: View<ViewModel>) : Interactor<Nothing, Collection<ViewModel>> {
-
-  @Inject lateinit var repository: Repository<Collection<ViewModel>>
-
-  init {
-    (view.component as StartComponent).inject(this)
-  }
-
-  override fun execute(vararg input: Nothing) = repository.getData()
-
-}
-
 data class ViewModel(val imageId: Long, val imageUrl: String) {
   constructor(imageId: String, imageUrl: String) : this(imageId.hashCode().toLong(), imageUrl)
 }
@@ -99,25 +75,8 @@ class ViewModule(val view: View<ViewModel>) {
 
   @Provides @PerActivity fun view() = view
 
-  @Provides @PerActivity fun presenter(injectedView: View<ViewModel>): Presenter<ViewModel> = StartPresenter(injectedView)
-
-}
-
-@Module
-class InteractorModule {
-
-  @Provides @PerActivity fun interactor(view: View<ViewModel>): Interactor<Nothing, Collection<ViewModel>> {
-    return ImageUrlsFetcher(view)
-  }
-
-}
-
-@Module
-class StartRepositoryModule {
-
-  @Provides @PerActivity fun repository(view: View<ViewModel>): Repository<Collection<ViewModel>> {
-    return CatsRepository(view)
-  }
+  @Provides @PerActivity fun presenter(injectedView: View<ViewModel>): Presenter<ViewModel> =
+      StartPresenter(injectedView)
 
 }
 
@@ -131,4 +90,6 @@ interface StartComponent : Component {
   fun inject(target: StartView)
   fun inject(target: StartPresenter)
   fun inject(target: ImageUrlsFetcher)
+  fun inject(target: DbUrlsFetcher)
+  fun inject(target: DbUrlsSaver)
 }

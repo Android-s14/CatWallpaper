@@ -14,13 +14,13 @@ class StartPresenterTest {
   @Before
   fun setUp() {
     presenter = StartPresenter(mock(View::class.java) as View<ViewModel>)
-    presenter.imageLoader = mock(Interactor::class.java) as Interactor<Nothing, Collection<ViewModel>>
+    presenter.onlineUrlsFetcher = mock(Interactor::class.java) as Interactor<Nothing, Collection<ViewModel>>
   }
 
   @Test
   fun onViewCreated() {
     presenter.onViewCreated()
-    verify(presenter.imageLoader, times(1)).execute(any())
+    verify(presenter.onlineUrlsFetcher, times(1)).execute(any())
   }
 
   @Test

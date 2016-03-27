@@ -22,14 +22,16 @@ interface Presenter<T> {
 
   fun onViewDestroyed()
 
+  fun updateView()
+
 }
 
 interface Interactor<K, T> {
   fun execute(vararg input: K): Observable<T>
 }
 
-interface Repository<T> {
-  fun getData(): Observable<T>
+interface Repository<K, T> {
+  fun execute(vararg input: K): Observable<T>
 }
 
 abstract class BaseView<T> : AppCompatActivity(), View<T> {

@@ -10,7 +10,7 @@ import shared.Repository
 import shared.View
 import javax.inject.Inject
 
-class CatsRepository(private val view: View<ViewModel>) : Repository<Collection<ViewModel>> {
+class CatsRepository(private val view: View<ViewModel>) : Repository<Nothing, Collection<ViewModel>> {
 
   @Inject lateinit var catsService: CatsApiInterface
 
@@ -18,7 +18,7 @@ class CatsRepository(private val view: View<ViewModel>) : Repository<Collection<
     view.applicationComponent.inject(this)
   }
 
-  override fun getData(): Observable<Collection<ViewModel>> {
+  override fun execute(vararg input: Nothing): Observable<Collection<ViewModel>> {
     return Observable.fromCallable { catsService.getImages().execute().body() }
         .subscribeOn(Schedulers.io())
         .flatMapIterable { it.data?.images }

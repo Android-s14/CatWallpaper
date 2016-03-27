@@ -64,6 +64,10 @@ class ExpandedPresenter(override val view: View<String>) : Presenter<String> {
   override fun onViewDestroyed() {
     throw UnsupportedOperationException()
   }
+
+  override fun updateView() {
+    throw UnsupportedOperationException()
+  }
 }
 
 @PerActivity

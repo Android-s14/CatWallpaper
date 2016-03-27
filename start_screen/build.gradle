@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply from: '../buildsystem/dependencies.gradle'
 apply plugin: 'kotlin-android'
 apply plugin: 'com.fernandocejas.frodo'
+apply plugin: 'realm-android'
 
 android {
     compileSdkVersion 23

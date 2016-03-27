@@ -1,6 +1,5 @@
 package shared
 
-import javax.inject.Qualifier
 import javax.inject.Scope
 
 interface Component
