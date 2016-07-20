@@ -26,11 +26,11 @@ interface Presenter<T> {
 
 }
 
-interface Interactor<K, T> {
+interface Interactor<in K, T> {
   fun execute(vararg input: K): Observable<T>
 }
 
-interface Repository<K, T> {
+interface Repository<in K, T> {
   fun execute(vararg input: K): Observable<T>
 }
 
