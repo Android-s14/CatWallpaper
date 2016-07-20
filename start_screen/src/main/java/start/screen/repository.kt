@@ -10,7 +10,7 @@ import shared.Repository
 import shared.View
 import javax.inject.Inject
 
-class CatsRepository(private val view: View<ViewModel>) : Repository<Nothing, Collection<ViewModel>> {
+class CatsRepository(view: View<ViewModel>) : Repository<Nothing, Collection<ViewModel>> {
 
   @Inject lateinit var catsService: CatsApiInterface
 

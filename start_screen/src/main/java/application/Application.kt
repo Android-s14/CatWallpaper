@@ -69,7 +69,7 @@ class NetworkModule {
       .client(client)
       .addConverterFactory(SimpleXmlConverterFactory.createNonStrict())
       .build()
-      .create(CatsApiInterface::class.java)
+      .create(CatsApiInterface::class.java)!!
 }
 
 @Module
@@ -82,6 +82,6 @@ class PicassoModule(private val context: Context) {
       .listener { picasso, uri, e ->
         Log.e("picasso", "error loading image", e)
       }
-      .build()
+      .build()!!
 
 }

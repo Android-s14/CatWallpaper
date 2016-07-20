@@ -7,10 +7,10 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import butterknife.bindView
 import com.android_s14.catwallpaper.R
 import com.squareup.picasso.Picasso
 import expanded.screen.ExpandedView
+import shared.bindView
 import shared.inflate
 import shared.toAndroidPair
 import javax.inject.Inject

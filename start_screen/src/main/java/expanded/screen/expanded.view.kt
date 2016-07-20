@@ -3,7 +3,6 @@ package expanded.screen
 import android.os.Bundle
 import android.support.v7.widget.Toolbar
 import android.widget.ImageView
-import butterknife.bindView
 import com.android_s14.catwallpaper.R
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
@@ -17,7 +16,7 @@ class ExpandedView : BaseView<String>() {
 
   @Inject override lateinit var presenter: Presenter<String>
   override val component by lazy { applicationComponent.plus(ExpandedViewModule(this)) }
-  @Inject lateinit var picasso : Picasso
+  @Inject lateinit var picasso: Picasso
 
   private val toolbar by bindView<Toolbar>(R.id.toolbar)
   private val loading by bindView<android.view.View>(R.id.loading_indicator)
@@ -32,24 +31,20 @@ class ExpandedView : BaseView<String>() {
   }
 
   private fun loadImage() {
-    picasso.load(getImageUrl()).placeholder(R.mipmap.ic_launcher).fit().centerInside().into(imageView, object : Callback {
-      override fun onSuccess() {
-        hideLoading()
-      }
-
-      override fun onError() {
-        hideLoading()
-      }
-    })
+    picasso.load(getImageUrl())
+        .placeholder(R.mipmap.ic_launcher)
+        .fit().centerInside()
+        .into(imageView, object : Callback {
+          override fun onSuccess() = hideLoading()
+          override fun onError() = hideLoading()
+        })
   }
 
   override fun showLoading() = loading.show()
 
   override fun hideLoading() = loading.hide()
 
-  override fun updateData(newData: Collection<String>) {
-    throw UnsupportedOperationException()
-  }
+  override fun updateData(newData: Collection<String>) = throw UnsupportedOperationException()
 
   private fun getImageUrl() = intent.getStringExtra(Const.INTENT_EXTRA_IMAGE_URL)
 
@@ -57,17 +52,10 @@ class ExpandedView : BaseView<String>() {
 
 class ExpandedPresenter(override val view: View<String>) : Presenter<String> {
 
-  override fun onViewCreated() {
-    throw UnsupportedOperationException()
-  }
+  override fun onViewCreated() = throw UnsupportedOperationException()
+  override fun onViewDestroyed() = throw UnsupportedOperationException()
+  override fun updateView() = throw UnsupportedOperationException()
 
-  override fun onViewDestroyed() {
-    throw UnsupportedOperationException()
-  }
-
-  override fun updateView() {
-    throw UnsupportedOperationException()
-  }
 }
 
 @PerActivity
