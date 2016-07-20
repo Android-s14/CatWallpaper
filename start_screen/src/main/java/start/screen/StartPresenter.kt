@@ -2,27 +2,23 @@ package start.screen
 
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
-import rx.subscriptions.CompositeSubscription
-import shared.Interactor
+import rx.subscriptions.SerialSubscription
+import shared.PerActivity
 import shared.Presenter
-import shared.View
 import javax.inject.Inject
 
-class StartPresenter(override val view: View<ViewModel>) : Presenter<ViewModel> {
+@PerActivity
+class StartPresenter
+@Inject constructor(private val view: StartView,
+                    private val onlineUrlsFetcher: ImageUrlsFetcher,
+                    private val dbUrlsFetcher: DbUrlsFetcher,
+                    private val dbUrlsSaver: DbUrlsSaver) : Presenter {
 
-  @Inject @field:[InteractorModule.OnlineUrlsFetcher] lateinit var onlineUrlsFetcher: Interactor<Nothing, Collection<ViewModel>>
-  @Inject @field:[InteractorModule.DbUrlsFetcher] lateinit var dbUrlsFetcher: Interactor<Nothing, Collection<ViewModel>>
-  @Inject @field:[InteractorModule.DbUrlsSaver] lateinit var dbUrlsSaver: Interactor<ViewModel, Boolean>
-
-  private val subscription = CompositeSubscription()
-
-  init {
-    (view.component as StartComponent).inject(this)
-  }
+  private val subscription = SerialSubscription()
 
   override fun onViewCreated() = getImageUrlsFromDb()
 
-  override fun onViewDestroyed() = subscription.clear()
+  override fun onViewDestroyed() = subscription.unsubscribe()
 
   override fun updateView() = getNewImageUrls()
 
@@ -31,11 +27,11 @@ class StartPresenter(override val view: View<ViewModel>) : Presenter<ViewModel> 
   private fun getImageUrlsFromDb() = dbUrlsFetcher.execute().updateUi()
 
   private fun Observable<Collection<ViewModel>>.updateUi(andSaveToDb: Boolean = false) {
-    this.observeOn(AndroidSchedulers.mainThread())
+    observeOn(AndroidSchedulers.mainThread())
         .doOnNext { if (andSaveToDb) dbUrlsSaver.execute(*it.toTypedArray()) }
         .subscribe {
           view.updateData(it)
           view.hideLoading()
-        }.let { subscription.add(it) }
+        }.let { subscription.set(it) }
   }
 }

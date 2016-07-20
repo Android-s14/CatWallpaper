@@ -5,8 +5,8 @@ import application.Application
 import application.ApplicationComponent
 import rx.Observable
 
-interface View<T> {
-  val presenter: Presenter<T>
+interface View<in T> {
+  val presenter: Presenter
   val component: Component
   val applicationComponent: ApplicationComponent
 
@@ -15,13 +15,10 @@ interface View<T> {
   fun updateData(newData: Collection<T>)
 }
 
-interface Presenter<T> {
-  val view: View<T>
+interface Presenter {
 
   fun onViewCreated()
-
   fun onViewDestroyed()
-
   fun updateView()
 
 }
@@ -34,7 +31,7 @@ interface Repository<in K, T> {
   fun execute(vararg input: K): Observable<T>
 }
 
-abstract class BaseView<T> : AppCompatActivity(), View<T> {
+abstract class BaseView<in T> : AppCompatActivity(), View<T> {
 
   override val applicationComponent by lazy { (application as Application).component }
 

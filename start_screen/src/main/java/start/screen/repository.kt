@@ -6,17 +6,13 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 import rx.Observable
 import rx.schedulers.Schedulers
+import shared.PerApplication
 import shared.Repository
-import shared.View
 import javax.inject.Inject
 
-class CatsRepository(view: View<ViewModel>) : Repository<Nothing, Collection<ViewModel>> {
-
-  @Inject lateinit var catsService: CatsApiInterface
-
-  init {
-    view.applicationComponent.inject(this)
-  }
+@PerApplication
+class CatsRepository
+@Inject constructor(private val catsService: CatsApiInterface) : Repository<Nothing, Collection<ViewModel>> {
 
   override fun execute(vararg input: Nothing): Observable<Collection<ViewModel>> {
     return Observable.fromCallable { catsService.getImages().execute().body() }

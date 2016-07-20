@@ -35,5 +35,3 @@ inline fun <reified T : kotlin.Enum<T>> KClass<T>.safeValueOf(name: String): T? 
     return null
   }
 }
-
-fun <T, R> Pair<T, R>.toAndroidPair() = android.support.v4.util.Pair.create(first, second)

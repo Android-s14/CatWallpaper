@@ -5,9 +5,13 @@ import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 import rx.Observable
 import rx.subjects.PublishSubject
+import shared.PerApplication
 import shared.Repository
+import javax.inject.Inject
 
-class RealmRepository() : Repository<Nothing, Collection<ViewModel>> {
+@PerApplication
+class RealmRepository
+@Inject constructor() : Repository<Nothing, Collection<ViewModel>> {
 
   override fun execute(vararg input: Nothing): Observable<Collection<ViewModel>> {
     val subject = PublishSubject.create<Collection<ViewModel>>()
@@ -21,7 +25,9 @@ class RealmRepository() : Repository<Nothing, Collection<ViewModel>> {
   }
 }
 
-class RealmSavingRepository() : Repository<ViewModel, Boolean> {
+@PerApplication
+class RealmSavingRepository
+@Inject constructor() : Repository<ViewModel, Boolean> {
 
   override fun execute(vararg input: ViewModel): Observable<Boolean> {
     val result = PublishSubject.create<Boolean>()

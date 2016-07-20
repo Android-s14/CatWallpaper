@@ -6,7 +6,7 @@ apply plugin: 'realm-android'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    buildToolsVersion "23.0.3"
 
     defaultConfig {
         applicationId "com.android_s14.catwallpaper"
@@ -38,6 +38,7 @@ dependencies {
 
     testCompile "junit:junit:$junit"
     testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin"
+    testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin"
     testCompile "org.mockito:mockito-all:$mockito"
 
     androidTestCompile "org.jetbrains.kotlin:kotlin-test:$kotlin"

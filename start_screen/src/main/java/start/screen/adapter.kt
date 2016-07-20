@@ -1,8 +1,9 @@
 package start.screen
 
-import android.app.Activity
 import android.content.Intent
-import android.support.v4.app.ActivityOptionsCompat
+import android.support.annotation.LayoutRes
+import android.support.v4.app.ActivityOptionsCompat.makeSceneTransitionAnimation
+import android.support.v4.util.Pair
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
@@ -10,48 +11,16 @@ import android.widget.ImageView
 import com.android_s14.catwallpaper.R
 import com.squareup.picasso.Picasso
 import expanded.screen.ExpandedView
+import shared.PerActivity
 import shared.bindView
 import shared.inflate
-import shared.toAndroidPair
 import javax.inject.Inject
 
-class ImageHolder(root: View, view: shared.View<ViewModel>) : RecyclerView.ViewHolder(root) {
+@PerActivity
+class ListAdapter @Inject constructor() : RecyclerView.Adapter<ImageHolder>() {
 
-  val imageView: ImageView by bindView(R.id.image_view)
-  lateinit var model: ViewModel
-
-  @Inject lateinit var picasso: Picasso
-
-  init {
-    view.applicationComponent.inject(this)
-  }
-
-  fun loadImage() {
-    checkNotNull(model, { "forgot to assign model to image holder " })
-    picasso.load(model.imageUrl).placeholder(R.mipmap.ic_launcher).fit().centerInside().into(imageView)
-    setupClickBehaviour()
-  }
-
-  private fun setupClickBehaviour() {
-    imageView.setOnClickListener { setupAndLaunchSharedTransition(it) }
-  }
-
-  private fun setupAndLaunchSharedTransition(it: View) {
-    val sharedName = it.context.getString(R.string.expanded_view_transition_element)
-    it.transitionName = sharedName
-    val intent = Intent(it.context, ExpandedView::class.java).apply { putExtra(Const.INTENT_EXTRA_IMAGE_URL, model.imageUrl) }
-    val options = ActivityOptionsCompat.makeSceneTransitionAnimation(it.context as Activity, (it to sharedName).toAndroidPair())
-    it.context.startActivity(intent, options.toBundle())
-  }
-}
-
-class ListAdapter(private val view: shared.View<ViewModel>) : RecyclerView.Adapter<ImageHolder>() {
-
-  init {
-    setHasStableIds(true)
-  }
-
-  val data = mutableListOf<ViewModel>()
+  private val data = mutableListOf<ViewModel>()
+  @Inject lateinit var factory: HoldersFactory
 
   fun swapData(newItem: Collection<ViewModel>) {
     data.clear()
@@ -67,7 +36,39 @@ class ListAdapter(private val view: shared.View<ViewModel>) : RecyclerView.Adapt
     holder?.apply { model = data[position] }?.loadImage()
   }
 
-  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageHolder? {
-    return ImageHolder(parent.inflate(R.layout.image_list_item), view)
+  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = factory.create(parent, R.layout.image_list_item)
+}
+
+@PerActivity
+class HoldersFactory @Inject constructor(private val picasso: Picasso, private val activity: StartView) {
+  fun create(parent: ViewGroup, @LayoutRes itemLayoutId: Int)
+      = ImageHolder(parent.inflate(itemLayoutId), picasso, activity)
+}
+
+class ImageHolder(root: View, private val picasso: Picasso, private val activity: StartView)
+: RecyclerView.ViewHolder(root) {
+
+  val imageView: ImageView by bindView(R.id.image_view)
+
+  lateinit var model: ViewModel
+
+  fun loadImage() {
+    picasso.load(model.imageUrl).placeholder(R.mipmap.ic_launcher).fit().centerInside().into(imageView)
+    setupClickBehaviour()
   }
+
+  private fun setupClickBehaviour() {
+    imageView.setOnClickListener { setupAndLaunchSharedTransition(it) }
+  }
+
+  private fun setupAndLaunchSharedTransition(imageView: View) {
+    val sharedName = imageView.context.getString(R.string.expanded_view_transition_element)
+    imageView.transitionName = sharedName
+    val intent = Intent(imageView.context, ExpandedView::class.java).apply {
+      putExtra(Const.INTENT_EXTRA_IMAGE_URL, model.imageUrl)
+    }
+    val options = makeSceneTransitionAnimation(activity, Pair.create(imageView, sharedName))
+    imageView.context.startActivity(intent, options.toBundle())
+  }
+
 }
