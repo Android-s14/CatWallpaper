@@ -5,7 +5,7 @@ import application.Application
 import application.ApplicationComponent
 import rx.Observable
 
-interface View<in T> {
+interface View<T> {
   val presenter: Presenter
   val component: Component
   val applicationComponent: ApplicationComponent
@@ -23,15 +23,15 @@ interface Presenter {
 
 }
 
-interface Interactor<in K, T> {
+interface Interactor<K, T> {
   fun execute(vararg input: K): Observable<T>
 }
 
-interface Repository<in K, T> {
+interface Repository<K, T> {
   fun execute(vararg input: K): Observable<T>
 }
 
-abstract class BaseView<in T> : AppCompatActivity(), View<T> {
+abstract class BaseView<T> : AppCompatActivity(), View<T> {
 
   override val applicationComponent by lazy { (application as Application).component }
 

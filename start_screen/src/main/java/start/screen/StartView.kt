@@ -9,15 +9,12 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import com.android_s14.catwallpaper.R
-import shared.BaseView
-import shared.bindView
-import shared.hide
-import shared.show
+import shared.*
 import javax.inject.Inject
 
 class StartView : BaseView<ViewModel>() {
 
-  @Inject override lateinit var presenter: StartPresenter
+  @Inject override lateinit var presenter: Presenter
   override val component by lazy { applicationComponent.plus(StartViewModule(this)) }
 
   private val toolbar by bindView<Toolbar>(R.id.toolbar)
@@ -25,7 +22,7 @@ class StartView : BaseView<ViewModel>() {
   private val listView by bindView<RecyclerView>(R.id.recycler_view)
   @Inject lateinit var listAdapter: ListAdapter
 
-  @Inject lateinit var optionsDelegate: StartScreenOptionsMenuDelegate
+  @Inject lateinit var optionsDelegate: OptionsMenuDelegate
 
   override fun onCreate(savedInstanceState: Bundle?) {
     component.inject(this)

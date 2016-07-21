@@ -3,16 +3,19 @@ package start.screen
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.subscriptions.SerialSubscription
+import shared.Interactor
 import shared.PerActivity
 import shared.Presenter
+import shared.View
 import javax.inject.Inject
 
 @PerActivity
 class StartPresenter
-@Inject constructor(private val view: StartView,
-                    private val onlineUrlsFetcher: ImageUrlsFetcher,
-                    private val dbUrlsFetcher: DbUrlsFetcher,
-                    private val dbUrlsSaver: DbUrlsSaver) : Presenter {
+@Inject constructor(private val view: View<ViewModel>,
+                    @RemoteUrlsFetcher private val remoteFetcher: Interactor<Nothing, Collection<ViewModel>>,
+                    @LocalUrlsFetcher private val localFetcher: Interactor<Nothing, Collection<ViewModel>>,
+                    @UrlsSaver private val urlsSaver: Interactor<ViewModel, Boolean>)
+: Presenter {
 
   private val subscription = SerialSubscription()
 
@@ -22,13 +25,13 @@ class StartPresenter
 
   override fun updateView() = getNewImageUrls()
 
-  private fun getNewImageUrls() = onlineUrlsFetcher.execute().updateUi(true)
+  private fun getNewImageUrls() = remoteFetcher.execute().updateUi(true)
 
-  private fun getImageUrlsFromDb() = dbUrlsFetcher.execute().updateUi()
+  private fun getImageUrlsFromDb() = localFetcher.execute().updateUi()
 
   private fun Observable<Collection<ViewModel>>.updateUi(andSaveToDb: Boolean = false) {
     observeOn(AndroidSchedulers.mainThread())
-        .doOnNext { if (andSaveToDb) dbUrlsSaver.execute(*it.toTypedArray()) }
+        .doOnNext { if (andSaveToDb) urlsSaver.execute(*it.toTypedArray()) }
         .subscribe {
           view.updateData(it)
           view.hideLoading()

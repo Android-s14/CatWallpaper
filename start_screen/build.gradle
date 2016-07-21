@@ -40,6 +40,8 @@ dependencies {
     testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin"
     testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin"
     testCompile "org.mockito:mockito-all:$mockito"
+    testCompile "com.nhaarman:mockito-kotlin:0.5.1"
+    testCompile "org.jetbrains.kotlin:kotlin-reflect:$kotlin"
 
     androidTestCompile "org.jetbrains.kotlin:kotlin-test:$kotlin"
     androidTestCompile "junit:junit:$junit"
