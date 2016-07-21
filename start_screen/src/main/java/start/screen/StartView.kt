@@ -30,6 +30,7 @@ class StartView : BaseView<ViewModel>() {
   override fun onCreate(savedInstanceState: Bundle?) {
     component.inject(this)
     setupView(savedInstanceState)
+    window.exitTransition = null
     presenter.onViewCreated()
   }
 

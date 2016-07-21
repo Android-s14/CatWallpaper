@@ -31,6 +31,7 @@ class ExpandedView : BaseView<String>() {
 
     component.inject(this)
 
+    window.enterTransition = null
     presenter.onViewCreated()
   }
 
