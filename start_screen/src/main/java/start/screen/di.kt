@@ -4,6 +4,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.Subcomponent
+import rx.Observable
 import shared.*
 import javax.inject.Qualifier
 
@@ -27,13 +28,13 @@ abstract class StartViewBinder() {
   abstract fun view(view: StartView): View<ViewModel>
 
   @Binds @RemoteUrlsFetcher
-  abstract fun remoteRepository(imageUrlsFetcher: ImageUrlsFetcher): Interactor<Nothing, Collection<ViewModel>>
+  abstract fun remoteFetcher(imageUrlsFetcher: ImageUrlsFetcher): Interactor<Nothing, Observable<Collection<ViewModel>>>
 
   @Binds @LocalUrlsFetcher
-  abstract fun localRepository(dbUrlsFetcher: DbUrlsFetcher): Interactor<Nothing, Collection<ViewModel>>
+  abstract fun localFetcher(dbUrlsFetcher: DbUrlsFetcher): Interactor<Nothing, Observable<Collection<ViewModel>>>
 
   @Binds @UrlsSaver
-  abstract fun localSavingRepository(dbUrlsSaver: DbUrlsSaver): Interactor<ViewModel, Boolean>
+  abstract fun localSaver(dbUrlsSaver: DbUrlsSaver): Interactor<ViewModel, Unit>
 
   @Binds
   abstract fun presenter(startPresenter: StartPresenter): Presenter

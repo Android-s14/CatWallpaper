@@ -11,9 +11,9 @@ import javax.inject.Inject
 
 @PerApplication
 class RealmRepository
-@Inject constructor() : Repository<Nothing, Collection<ViewModel>> {
+@Inject constructor() : Repository<ViewModel> {
 
-  override fun execute(vararg input: Nothing): Observable<Collection<ViewModel>> {
+  override fun query(): Observable<Collection<ViewModel>> {
     val subject = PublishSubject.create<Collection<ViewModel>>()
     val results = Realm.getDefaultInstance().where(RealmViewModel::class.java).findAllAsync()
     results.addChangeListener {
@@ -23,26 +23,17 @@ class RealmRepository
     }
     return subject
   }
-}
 
-@PerApplication
-class RealmSavingRepository
-@Inject constructor() : Repository<ViewModel, Boolean> {
-
-  override fun execute(vararg input: ViewModel): Observable<Boolean> {
-    val result = PublishSubject.create<Boolean>()
+  override fun write(vararg items: ViewModel) {
     val realm = Realm.getDefaultInstance()
     realm.executeTransactionAsync({
                                     val localRealm = Realm.getDefaultInstance()
-                                    input.forEach {
+                                    items.forEach {
                                       val model = localRealm.createObject(RealmViewModel::class.java)
                                       model.imageId = it.imageId
                                       model.imageUrl = it.imageUrl
                                     }
-                                  },
-                                  { result.onNext(true); result.onCompleted() },
-                                  { result.onNext(false); result.onCompleted() })
-    return result
+                                  })
   }
 }
 

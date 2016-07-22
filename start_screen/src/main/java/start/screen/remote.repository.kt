@@ -12,9 +12,9 @@ import javax.inject.Inject
 
 @PerApplication
 class CatsRepository
-@Inject constructor(private val catsService: CatsApiInterface) : Repository<Nothing, Collection<ViewModel>> {
+@Inject constructor(private val catsService: CatsService) : Repository<ViewModel> {
 
-  override fun execute(vararg input: Nothing): Observable<Collection<ViewModel>> {
+  override fun query(): Observable<Collection<ViewModel>> {
     return Observable.fromCallable { catsService.getImages().execute().body() }
         .subscribeOn(Schedulers.io())
         .flatMapIterable { it.data?.images }
@@ -22,9 +22,11 @@ class CatsRepository
         .toList()
         .map { it }
   }
+
+  override fun write(vararg items: ViewModel) = throw UnsupportedOperationException("uploading is not supported")
 }
 
-interface CatsApiInterface {
+interface CatsService {
 
   @GET(Const.IMAGES_URL)
   fun getImages(@Query(Const.API_KEY) apiKey: String? = null,

@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity
 import application.Application
 import application.ApplicationComponent
 import rx.Observable
+import start.screen.ViewModel
 
 interface View<T> {
   val presenter: Presenter
@@ -24,11 +25,12 @@ interface Presenter {
 }
 
 interface Interactor<K, T> {
-  fun execute(vararg input: K): Observable<T>
+  fun execute(vararg input: K): T
 }
 
-interface Repository<K, T> {
-  fun execute(vararg input: K): Observable<T>
+interface Repository<K> {
+  fun query(): Observable<Collection<ViewModel>>
+  fun write(vararg items: K)
 }
 
 abstract class BaseView<T> : AppCompatActivity(), View<T> {

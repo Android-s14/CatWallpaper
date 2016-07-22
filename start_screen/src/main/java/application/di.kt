@@ -13,7 +13,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 import shared.PerApplication
-import start.screen.CatsApiInterface
+import start.screen.CatsService
 import start.screen.Const
 import start.screen.StartComponent
 import start.screen.StartViewModule
@@ -43,12 +43,12 @@ class NetworkModule {
 
   @Provides
   @PerApplication
-  fun catsApi(client: OkHttpClient) = Retrofit.Builder()
+  fun catsService(client: OkHttpClient) = Retrofit.Builder()
       .baseUrl(Const.CATS_BASE_URL)
       .client(client)
       .addConverterFactory(SimpleXmlConverterFactory.createNonStrict())
       .build()
-      .create(CatsApiInterface::class.java)!!
+      .create(CatsService::class.java)!!
 }
 
 @Module

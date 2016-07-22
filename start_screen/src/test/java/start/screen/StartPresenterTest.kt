@@ -18,9 +18,9 @@ class StartPresenterTest {
   private lateinit var presenter: StartPresenter
 
   private lateinit var view: View<ViewModel>
-  private lateinit var remoteFetcher: Interactor<Nothing, Collection<ViewModel>>
-  private lateinit var localFetcher: Interactor<Nothing, Collection<ViewModel>>
-  private lateinit var localSaver: Interactor<ViewModel, Boolean>
+  private lateinit var remoteFetcher: Interactor<Nothing, Observable<Collection<ViewModel>>>
+  private lateinit var localFetcher: Interactor<Nothing, Observable<Collection<ViewModel>>>
+  private lateinit var localSaver: Interactor<ViewModel, Unit>
 
   @Before
   fun setUp() {

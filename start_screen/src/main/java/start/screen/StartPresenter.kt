@@ -11,10 +11,11 @@ import javax.inject.Inject
 
 @PerActivity
 class StartPresenter
-@Inject constructor(private val view: View<ViewModel>,
-                    @RemoteUrlsFetcher private val remoteFetcher: Interactor<Nothing, Collection<ViewModel>>,
-                    @LocalUrlsFetcher private val localFetcher: Interactor<Nothing, Collection<ViewModel>>,
-                    @UrlsSaver private val urlsSaver: Interactor<ViewModel, Boolean>)
+@Inject constructor(
+    private val view: View<ViewModel>,
+    @RemoteUrlsFetcher private val remoteFetcher: Interactor<Nothing, Observable<Collection<ViewModel>>>,
+    @LocalUrlsFetcher private val localFetcher: Interactor<Nothing, Observable<Collection<ViewModel>>>,
+    @UrlsSaver private val urlsSaver: Interactor<ViewModel, Unit>)
 : Presenter {
 
   private val subscription = SerialSubscription()
