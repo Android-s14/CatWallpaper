@@ -24,9 +24,12 @@ class ExpandedPresenter
   }
 
   private fun loadImage() {
-    picasso.load(imageUrl).fit().centerInside().into(targetImageView, object : Callback {
-      override fun onSuccess() = view.hideLoading()
-      override fun onError() = view.hideLoading()
-    })
+    picasso.load(imageUrl)
+        .fit()
+        .centerInside()
+        .into(targetImageView, object : Callback {
+          override fun onSuccess() = view.hideLoading()
+          override fun onError() = view.hideLoading()
+        })
   }
 }

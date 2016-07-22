@@ -1,19 +1,13 @@
 package start.screen
 
 import com.nhaarman.mockito_kotlin.*
-import org.junit.After
-import org.junit.Before
 import org.junit.Test
 import rx.Observable
-import rx.Scheduler
-import rx.android.plugins.RxAndroidPlugins
-import rx.android.plugins.RxAndroidSchedulersHook
-import rx.plugins.RxJavaHooks
-import rx.schedulers.Schedulers
+import shared.BaseTest
 import shared.Interactor
 import shared.View
 
-class StartPresenterTest {
+class StartPresenterTest : BaseTest() {
 
   private lateinit var presenter: StartPresenter
 
@@ -22,10 +16,7 @@ class StartPresenterTest {
   private lateinit var localFetcher: Interactor<Nothing, Observable<Collection<ViewModel>>>
   private lateinit var localSaver: Interactor<ViewModel, Unit>
 
-  @Before
-  fun setUp() {
-    registerRxJavaHooks()
-
+  override fun init() {
     view = mock()
     remoteFetcher = mock()
     localFetcher = mock()
@@ -35,12 +26,6 @@ class StartPresenterTest {
     whenever(localFetcher.execute()).thenReturn(Observable.just(listOf(ViewModel("id", "url"))))
 
     presenter = StartPresenter(view, remoteFetcher, localFetcher, localSaver)
-  }
-
-  @After
-  fun tearDown() {
-    RxJavaHooks.reset()
-    RxAndroidPlugins.getInstance().reset()
   }
 
   @Test
@@ -83,13 +68,4 @@ class StartPresenterTest {
     presenter.onViewDestroyed()
   }
 
-  private fun registerRxJavaHooks() {
-    RxAndroidPlugins.getInstance().registerSchedulersHook(object : RxAndroidSchedulersHook() {
-      override fun getMainThreadScheduler(): Scheduler {
-        return Schedulers.immediate()
-      }
-    })
-    RxJavaHooks.setOnIOScheduler { Schedulers.immediate() }
-    RxJavaHooks.setOnComputationScheduler { Schedulers.immediate() }
-  }
 }
