@@ -1,5 +1,6 @@
 package start.screen
 
+import android.app.Activity
 import android.content.Intent
 import android.support.annotation.LayoutRes
 import android.support.v4.app.ActivityOptionsCompat.makeSceneTransitionAnimation
@@ -40,12 +41,12 @@ class ListAdapter @Inject constructor() : RecyclerView.Adapter<ImageHolder>() {
 }
 
 @PerActivity
-class HoldersFactory @Inject constructor(private val picasso: Picasso, private val activity: StartView) {
+class HoldersFactory @Inject constructor(private val picasso: Picasso, private val activity: Activity) {
   fun create(parent: ViewGroup, @LayoutRes itemLayoutId: Int)
       = ImageHolder(parent.inflate(itemLayoutId), picasso, activity)
 }
 
-class ImageHolder(root: View, private val picasso: Picasso, private val activity: StartView)
+class ImageHolder(root: View, private val picasso: Picasso, private val activity: Activity)
 : RecyclerView.ViewHolder(root) {
 
   val imageView: ImageView by bindView(R.id.image_view)

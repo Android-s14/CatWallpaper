@@ -1,5 +1,6 @@
 package start.screen
 
+import android.app.Activity
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -17,15 +18,13 @@ interface StartComponent : Component {
 @Module
 class StartViewModule(private val startView: StartView) {
 
-  @Provides @PerActivity fun view() = startView
+  @Provides @PerActivity fun view(): View<ViewModel> = startView
+  @Provides @PerActivity fun activity(): Activity = startView
 
 }
 
 @Module
 abstract class StartViewBinder() {
-
-  @Binds
-  abstract fun view(view: StartView): View<ViewModel>
 
   @Binds @RemoteUrlsFetcher
   abstract fun remoteFetcher(imageUrlsFetcher: ImageUrlsFetcher): Interactor<Nothing, Observable<Collection<ViewModel>>>

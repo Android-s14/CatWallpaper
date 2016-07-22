@@ -1,5 +1,6 @@
 package start.screen
 
+import android.app.Activity
 import android.view.Menu
 import android.view.MenuItem
 import com.android_s14.catwallpaper.R
@@ -9,7 +10,7 @@ import javax.inject.Inject
 
 @PerActivity
 class StartScreenOptionsMenuDelegate
-@Inject constructor(private val activity: StartView,
+@Inject constructor(private val activity: Activity,
                     private val presenter: StartPresenter) : OptionsMenuDelegate {
 
   override fun onCreateOptionsMenu(menu: Menu?): Boolean {
